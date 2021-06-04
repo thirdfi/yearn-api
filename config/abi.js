@@ -12207,7 +12207,7 @@ const hfDAOContract = [
   }
 ];
 
-const hfStrategyContract =[
+const hfStrategyContract = [
   {
     "anonymous": false,
     "inputs": [
