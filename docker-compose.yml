@@ -19,11 +19,6 @@ services:
       - .env
     ports:
       - "8080:8080"
-    volumes:
-      - "./config:/api/config:ro"
-      - "./services:/api/services:ro"
-      - "./utils:/api/utils:ro"
-      - "./models:/api/models:ro"
     networks:
       - backend
 volumes:
