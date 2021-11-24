@@ -440,6 +440,42 @@
         ],
         "responses": {}
       }
+    },
+
+
+    "/v2/stable/coins": {
+      "get": {
+        "tags": ["V2"],
+        "description": "Get All stable coins contract and abi info(USDC, USDT and DAI)",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "query",
+            "description": "network name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/v2/strategies/list": {
+      "get": {
+        "tags": ["V2"],
+        "description": "Get All strategy List by network",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "query",
+            "description": "network name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
     }
   }
 }
