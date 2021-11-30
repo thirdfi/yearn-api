@@ -5,6 +5,7 @@ const CoinGecko = require("coingecko-api");
 const CoinGeckoClient = new CoinGecko();
 
 const contractHelper = require('../../../utils/contract');
+const util = require("util");
 
 let tokens = {
   "tether": 0.00,
@@ -229,8 +230,12 @@ const saveTVL = async (name, tvl) => {
 };
 
 const findAllTVL = async (vaults) => {
+  return findTVLByStrategies(Object.keys(vaults.farmer)); 
+}
+
+const findTVLByStrategies = async(vaults) => {
   let finalResult = {};
-  for (vault in vaults.farmer) {
+  for (vault of vaults) {
     const collection = vault + "_tvl";
     const dbResult = await db.getTVL(collection, { limit: 1 });
     finalResult[vault] = (dbResult && dbResult.length > 0) ? dbResult[0] : null;
@@ -312,3 +317,4 @@ module.exports.totalHandle = async (req, res) => {
 }
 
 module.exports.findAllTVL = findAllTVL;
+module.exports.findTVLByStrategies = findTVLByStrategies;
