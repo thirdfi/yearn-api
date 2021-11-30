@@ -4,7 +4,7 @@ const delay = require("delay");
 const contractHelper = require("../../../../utils/contract");
 const dateTimeHelper = require("../../../../utils/dateTime");
 const historicalDb = require('../../../../models/historical-apy.model');
-const { getPricePerFullShare, calculateApy } = require("./handler");
+const { getPricePerFullShare, calculateApy, getLeverageBNBPricePerFullShare } = require("./handler");
 
 let bscBlockNumber = {
     current: 0,
@@ -24,8 +24,16 @@ const getApyForVault = async (vault) => {
     } = vault;
 
     const contract = await contractHelper.getBSCContract(abi, address);
-    const currentPrice = await getPricePerFullShare(contract, bscBlockNumber.current, inceptionBlockNumber, vaultSymbol);
-    const oneDayAgoPrice = await getPricePerFullShare(contract, bscBlockNumber.oneDay, inceptionBlockNumber, vaultSymbol);
+    let currentPrice = 0; let oneDayAgoPrice = 0;
+
+    if(vaultSymbol === "bnb2x") {
+        currentPrice = await getLeverageBNBPricePerFullShare(contract, bscBlockNumber.current, inceptionBlockNumber, vaultSymbol);
+        oneDayAgoPrice = await getLeverageBNBPricePerFullShare(contract, bscBlockNumber.current, inceptionBlockNumber, vaultSymbol);
+    } else {
+        currentPrice = await getPricePerFullShare(contract, bscBlockNumber.current, inceptionBlockNumber, vaultSymbol);
+        oneDayAgoPrice = await getPricePerFullShare(contract, bscBlockNumber.oneDay, inceptionBlockNumber, vaultSymbol);
+    }
+
     const apy = calculateApy(triggerDuration, currentPrice, oneDayAgoPrice);
     return {apy : apy};
 }
