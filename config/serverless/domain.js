@@ -305,6 +305,21 @@ const testContracts = {
         {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
       ],
       network: constant.AVAX,
+    },
+    bnb2x: {
+      address: '0xCe72fac56e0581138C38e0072B8297fC5bE50Cc9',
+      abi: abi.leverageBnbVaultContract,
+      strategyAddress: '',
+      strategyABI: [],
+      contractType: "bnb2x",
+      tokenId: ["bnb"],
+      inceptionBlock: 14441185,
+      pnl:[
+        {db: "lp", tokenId: ""},
+        {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
+        {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
+      ],
+      network: constant.BSC,
     }
   },
   DVD: {
@@ -668,10 +683,25 @@ const mainContracts = {
     //   inceptionBlock: 2074921,
     //   pnl:[
     //     {db: "lp", tokenId: ""},
+  //     {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
+  //     {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
+    //   ],
+    //   network: constant.AVAX,
+    // },
+    // bnb2x: {
+    //   address: '', // Update here
+    //   abi: abi.leverageBnbVaultContract,
+    //   strategyAddress: '',
+    //   strategyABI: [],
+    //   contractType: "bnb2x",
+    //   tokenId: ["bnb"], 
+    //   inceptionBlock: 14441185, // Update here
+    //   pnl:[
+    //     {db: "lp", tokenId: ""},
     //     {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
     //     {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
     //   ],
-    //   network: constant.AVAX,
+    //   network: constant.BSC,
     // }
   },
   compund: {
