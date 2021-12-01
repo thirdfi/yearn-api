@@ -50,6 +50,7 @@ const findStrategies = async(req,res) => {
                             tvl: vaultInfo.tvl.tvl,
                             pnl: vaultInfo.pnl,
                             asset_distribution: vaultInfo.asset_distribution,
+                            asset_allocation: vaultInfo.asset_allocation ? vaultInfo.asset_allocation : null
                         }
                     }
 

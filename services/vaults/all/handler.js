@@ -1,7 +1,7 @@
 const { findAllTVL, findTVLByStrategies } = require("../tvl/handler");
 const { findAllPool } = require("../../staking/handler");
 const { findAllVaultCategory: findAllVaults } = require("../category/handler");
-const { findAllStrategiesAssetDistribution } = require("../distribution/handler");
+const { findAllStrategiesAssetDistribution, getUnderlyingAssetsForBnb2x } = require("../distribution/handler");
 const { calculateStrategyPNL, findPerformanceWithTimePeriods } = require("../performance/handler");
 const { getLatestTotalAmountDepositInfo } = require("../totalDepositedAmount/handler");
 
@@ -98,13 +98,14 @@ const getVaultDAOmineAPY = (pools, vaultAddress) => {
 const proccessingVault = async (obj) => {
     const { vaults, selectedNetwork } = obj;
 
-    const [tvls, daominePools, vaultContracts, performances, assetsDistribution, totalDepositedAmounts] = await Promise.all([
+    const [tvls, daominePools, vaultContracts, performances, assetsDistribution, totalDepositedAmounts, underlyingAssets] = await Promise.all([
         findTVLByStrategies(vaults),
         findAllPool(),
         findAllVaults(),
         findAllPerformance(vaults),
         findAllStrategiesAssetDistribution(),
-        findAllDepositedAmount()
+        findAllDepositedAmount(),
+        getUnderlyingAssetsForBnb2x(),
     ]);
     
 
@@ -136,6 +137,12 @@ const proccessingVault = async (obj) => {
         if (["daoCDV2", "daoSTO2"].includes(key)) {
             obj["totalDepositedAmount"] = totalDepositedAmounts[key];
         }
+
+        // Underlying asset for Leverage BNB 
+        if(key === "bnb2x") {
+            obj["asset_allocation"] = underlyingAssets;
+        }
+
         results[key] = obj;
     });
 

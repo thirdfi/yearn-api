@@ -6,6 +6,9 @@ const dateTimeHelper = require("../../../utils/dateTime");
 
 const constant = require("../../../utils/constant");
 const tokenDb = require("../../../models/token.model");
+const BigNumber = require("bignumber.js");
+
+const util = require("util");
 
 let delayTime = 10000;
 
@@ -40,6 +43,61 @@ const getUnderlyingAssetsForTA = async () => {
         console.error(`Error in getUnderlyingAssetsForTA()`, err);
     } finally {
         return result;
+    }
+}
+
+// Special case for Leverage BNB
+const getUnderlyingAssetsForBnb2x = async() => {
+    let allocation = { BNB: 0, USDC: 0};
+    try {
+        if(process.env.PRODUCTION === null ||  process.env.PRODUCTION === "") {
+            // In testnet environment
+            throw(`getUnderlyingAssetsForBnb2x only supported on mainnet`);
+        }
+
+        // Create BNB2X Contract
+        const contracts = contractHelper.getContractsFromDomain();
+        const { address: bnb2xAddress } = contracts.farmer["bnb2x"];
+        console.log(bnb2xAddress);
+        if(bnb2xAddress === undefined) {
+            throw (`Not able to find bnb2x info`);
+        }
+        
+        // Create cBNB contract
+        const { abi: cBNBAbi, address: cBNBAddress} = contracts.leverage.crBnb;
+        const cBnbContract = await contractHelper.getBSCContract(cBNBAbi, cBNBAddress);
+
+        // Create cUSDC contract
+        const { abi: cUsdcAbi, address: cUsdcAddress}  = contracts.leverage.crUsdc;
+        const cUsdcContract =  await contractHelper.getBSCContract(cUsdcAbi, cUsdcAddress);
+        
+        // Getting BNB Balance
+        let bnbBalance = 0;
+        const cBnbBalance = await cBnbContract.methods.balanceOf(bnb2xAddress).call();
+        let exchangeRate = await cBnbContract.methods.exchangeRateStored().call();
+    
+        // Getting Exchange Rate
+        exchangeRate = new BigNumber(exchangeRate);
+        bnbBalance =new BigNumber(cBnbBalance).multipliedBy(exchangeRate).shiftedBy(-8);
+       
+        // Getting USDC Debt
+        let usdcDebt = await cUsdcContract.methods.borrowBalanceStored(bnb2xAddress).call();
+        usdcDebt = new BigNumber(usdcDebt);
+
+        const total = bnbBalance.plus(usdcDebt);
+
+        let bnbAllocation = bnbBalance.dividedBy(total);
+        let usdcAllocation = usdcDebt.dividedBy(total);
+        
+        allocation = {
+            BNB: bnbAllocation.toNumber(),
+            USDC: usdcAllocation.toNumber()
+        };
+
+    } catch(err){
+        console.error(`Error in getUnderlyingAssetsForBnb2x(): `, err);
+    } finally {
+        return allocation;
     }
 }
 
@@ -200,4 +258,5 @@ module.exports.handler = async(req, res) => {
 module.exports.findAllStrategiesAssetDistribution = findAllStrategiesAssetDistribution;
 module.exports.saveAssetsPrice = saveAssetsPrice;
 module.exports.getStrategyAssetDistribution = getStrategyAssetDistribution;
+module.exports.getUnderlyingAssetsForBnb2x = getUnderlyingAssetsForBnb2x;
 

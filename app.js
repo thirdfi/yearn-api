@@ -18,6 +18,7 @@ const stakingRouter = require("./routes/stakingRoute");
 const eventRouter = require("./routes/eventRoute");
 const vaultRouter = require("./routes/vaultRoute");
 const reimbursementRouter = require("./routes/reimbursementRouter");
+const partnerRouter = require("./routes/partnershipRoute");
 const v2Router = require('./routes/v2Routes');
 
 async function init() {
@@ -67,6 +68,7 @@ async function init() {
     app.use("/vaults", vaultRouter);
     app.use("/v2", v2Router);
     app.use("/reimbursement-addresses", reimbursementRouter);
+    app.use("/partner", partnerRouter);
 
     app.listen(port, () => console.log(`Listening on ${port}`));
 }
