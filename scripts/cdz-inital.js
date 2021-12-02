@@ -13,7 +13,7 @@ db.cdz_strategies.insertMany([
         "group": "Expert",
         "network": "bsc",
         "tokens": [
-            { label: "BNB", address: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", deposit: true, withdraw: true }
+            { name: "BNB", address: "", deposit: true, withdraw: true },
         ],
         "happyHourEnabled": true,
         "isDepositEnabled": true,
