@@ -476,6 +476,23 @@
         ],
         "responses": {}
       }
+    },
+    "/partner/{partner}/strategies/list": {
+      "get": {
+        "tags": ["Partner"],
+        "description": "Get All strategy List by partner",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "partner",
+            "in": "path",
+            "description": "Partner ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
     }
   }
 }

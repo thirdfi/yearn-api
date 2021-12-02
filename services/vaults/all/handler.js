@@ -140,7 +140,8 @@ const proccessingVault = async (obj) => {
 
         // Underlying asset for Leverage BNB 
         if(key === "bnb2x") {
-            obj["asset_allocation"] = underlyingAssets;
+            obj["asset_allocation"] = underlyingAssets.allocation;
+            obj["leverageRatio"] = underlyingAssets.leverageRatio;
         }
 
         results[key] = obj;

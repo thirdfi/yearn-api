@@ -9,6 +9,7 @@ const tokenDb = require("../../../models/token.model");
 const BigNumber = require("bignumber.js");
 
 const util = require("util");
+const { TOKEN_COINGECKO_ID } = require("../../../utils/constant");
 
 let delayTime = 10000;
 
@@ -48,7 +49,10 @@ const getUnderlyingAssetsForTA = async () => {
 
 // Special case for Leverage BNB
 const getUnderlyingAssetsForBnb2x = async() => {
-    let allocation = { BNB: 0, USDC: 0};
+    let bnbAllocation = 0;
+    let usdcAllocation = 0;
+    let leverageRatio = 0;
+
     try {
         if(process.env.PRODUCTION === null ||  process.env.PRODUCTION === "") {
             // In testnet environment
@@ -58,7 +62,7 @@ const getUnderlyingAssetsForBnb2x = async() => {
         // Create BNB2X Contract
         const contracts = contractHelper.getContractsFromDomain();
         const { address: bnb2xAddress } = contracts.farmer["bnb2x"];
-        console.log(bnb2xAddress);
+        
         if(bnb2xAddress === undefined) {
             throw (`Not able to find bnb2x info`);
         }
@@ -86,18 +90,43 @@ const getUnderlyingAssetsForBnb2x = async() => {
 
         const total = bnbBalance.plus(usdcDebt);
 
-        let bnbAllocation = bnbBalance.dividedBy(total);
-        let usdcAllocation = usdcDebt.dividedBy(total);
-        
-        allocation = {
-            BNB: bnbAllocation.toNumber(),
-            USDC: usdcAllocation.toNumber()
-        };
+        bnbAllocation = bnbBalance.dividedBy(total);
+        usdcAllocation = usdcDebt.dividedBy(total);
+
+        leverageRatio = bnbBalance.dividedBy(bnbBalance.subtract(usdcDebt));
 
     } catch(err){
         console.error(`Error in getUnderlyingAssetsForBnb2x(): `, err);
     } finally {
-        return allocation;
+        const underlyingAssets = await tokenDb.findTokenByIds([TOKEN_COINGECKO_ID.USDC, TOKEN_COINGECKO_ID.BNB]);
+        const result =  underlyingAssets.map(asset => {
+            const assetArray = [];
+            const assetSymbol = asset.symbol;
+            assetArray.push(assetSymbol);
+
+             // Representative color in chart
+             let chartColor = constant.TOKEN_CHART_COLOR[assetSymbol];
+             if(chartColor === undefined) {
+                 chartColor = constant.BACKUP_CHART_COLOR[index];
+                 index ++;
+             }
+    
+            const assetObject = {
+                ...asset, 
+                infoLink: `https://www.coingecko.com/en/coins/${asset.tokenId}`,
+                color: chartColor, 
+                percent: asset.tokenId === TOKEN_COINGECKO_ID.USDC  
+                    ? usdcAllocation
+                    : bnbAllocation
+            }
+
+            delete assetObject._id;
+           
+            assetArray.push(assetObject);
+            return assetArray;
+        });
+
+        return { allocation: result, leverageRatio };
     }
 }
 
