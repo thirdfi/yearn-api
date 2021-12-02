@@ -54,7 +54,7 @@ const testVaults = [
     description: "Leverage BNB Vault",
     vaultSymbol: "bnb2x",
     erc20address: ["0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"],
-    vaultContractAddress: "0xCe72fac56e0581138C38e0072B8297fC5bE50Cc9", // Update
+    vaultContractAddress: "0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd", // Update
     vaultContractABI: abi.leverageBnbVaultContract,
     balance: 0,
     vaultBalance: 0,
@@ -128,7 +128,7 @@ const mainVaults = [
     description: "Leverage BNB Vault",
     vaultSymbol: "bnb2x",
     erc20address: ["0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"], // WBNB Update here
-    vaultContractAddress: "0xCe72fac56e0581138C38e0072B8297fC5bE50Cc9", // Update here
+    vaultContractAddress: "0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd", // Update here
     vaultContractABI: abi.leverageBnbVaultContract,
     balance: 0,
     vaultBalance: 0,

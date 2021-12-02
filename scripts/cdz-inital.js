@@ -2,7 +2,7 @@ db.cdz_strategies.insertMany([
     {
         "name": "Leverage BNB",
         "symbol": "bnb2x",
-        "address": "0xCe72fac56e0581138C38e0072B8297fC5bE50Cc9",
+        "address": "0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd",
         "decimals": 18,
         "feeDecimals": 18,
         "infoLink": "",

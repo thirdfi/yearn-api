@@ -307,13 +307,13 @@ const testContracts = {
       network: constant.AVAX,
     },
     bnb2x: {
-      address: '0xCe72fac56e0581138C38e0072B8297fC5bE50Cc9',
+      address: '0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd',
       abi: abi.leverageBnbVaultContract,
       strategyAddress: '',
       strategyABI: [],
       contractType: "bnb2x",
       tokenId: ["bnb"],
-      inceptionBlock: 14441185,
+      inceptionBlock: 14619576,
       pnl:[
         {db: "lp", tokenId: ""},
         {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
