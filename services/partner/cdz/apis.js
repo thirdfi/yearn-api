@@ -27,11 +27,16 @@ const findStrategies = async(req,res) => {
             throw(`Partner is undefined`);
         }
 
+        let chosenNetwork = req.params.network;
+        if(chosenNetwork === undefined || chosenNetwork === null || chosenNetwork === "") {
+            chosenNetwork = "bscMain";
+        }   
+    
         const strategiesModels = getStrategiesModel(partner);
         if(strategiesModels === null) {
             throw(`Unable to find partner model`);
         }
-        strategyList = await strategiesModels.findAll();
+        strategyList = await strategiesModels.findAll(chosenNetwork);
        
         if(strategyList.length > 0) {
             const strategyKeys = strategyList.map(s => s.symbol);

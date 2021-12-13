@@ -477,7 +477,7 @@
         "responses": {}
       }
     },
-    "/partner/{partner}/strategies/list": {
+    "/partner/{partner}/strategies/{network}/list": {
       "get": {
         "tags": ["Partner"],
         "description": "Get All strategy List by partner",
@@ -487,6 +487,13 @@
             "name": "partner",
             "in": "path",
             "description": "Partner ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "network",
+            "in": "path",
+            "description": "Network Type.",
             "required": true,
             "type": "string"
           }
