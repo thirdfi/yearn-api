@@ -52,8 +52,8 @@ const findStrategies = async(req,res) => {
                     let objToAppend = {};
                     if(vaultInfo !== undefined) {
                         objToAppend = {
-                            tvl: vaultInfo.tvl.tvl,
-                            pnl: vaultInfo.pnl,
+                            tvl: typeof vaultInfo.tvl.tvl === "string" ? parseFloat(vaultInfo.tvl.tvl) : vaultInfo.tvl.tvl ,
+                            pnl: typeof vaultInfo.pnl === "string" ? parseFloat(vaultInfo.pnl) : vaultInfo.pnl,
                             asset_distribution: vaultInfo.asset_distribution,
                             asset_allocation: vaultInfo.asset_allocation ? vaultInfo.asset_allocation : null,
                             leverageRatio: vaultInfo.leverageRatio ? vaultInfo.leverageRatio : 0
