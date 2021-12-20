@@ -203,6 +203,10 @@ const DAOA2S_ASSET_DISTRIBUTION = {
     USDC: { percent: 33.33, tokenId: TOKEN_COINGECKO_ID.USDC },
 };
 
+const BNB2X_ASSET_DISTRIBUTION = {
+    BNB: { percent: 100, tokenId: TOKEN_COINGECKO_ID.BNB},
+};
+
 const CONTRACT_IDS = {
     DAOCDV: "daoCDV",
     DAOELO: "daoELO",
@@ -218,7 +222,8 @@ const CONTRACT_IDS = {
     DAOAXA: "daoAXA",
     DAOAXS: "daoAXS",
     DAOASA: "daoASA",
-    DAOA2S: "daoA2S"
+    DAOA2S: "daoA2S",
+    BNB2X: "bnb2x",
 }
 
 const ETF_STRATEGIES = [
@@ -236,7 +241,8 @@ const ETF_STRATEGIES = [
     CONTRACT_IDS.DAOAXA,
     CONTRACT_IDS.DAOAXS,
     CONTRACT_IDS.DAOASA,
-    CONTRACT_IDS.DAOA2S
+    CONTRACT_IDS.DAOA2S,
+    CONTRACT_IDS.BNB2X
 ];
 
 const STRATEGY_TYPE = {
@@ -258,6 +264,7 @@ const STRATEGY_TYPE = {
     DAOAXS: "daoAXS",
     DAOASA: "daoASA",
     DAOA2S: "daoA2S",
+    BNB2X: "bnb2x"
 }
 
 const ETHEREUM = "ethereum";
@@ -311,7 +318,8 @@ module.exports = {
     DAOAXS_ASSET_DISTRIBUTION,
     DAOASA_ASSET_DISTRIBUTION,
     DAOA2S_ASSET_DISTRIBUTION,
-    
+    BNB2X_ASSET_DISTRIBUTION,
+
     TOKEN_COINGECKO_ID,
     ETF_STRATEGIES,
     STRATEGY_TYPE,

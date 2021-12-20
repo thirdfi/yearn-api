@@ -305,6 +305,21 @@ const testContracts = {
         {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
       ],
       network: constant.AVAX,
+    },
+    bnb2x: {
+      address: '0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd',
+      abi: abi.leverageBnbVaultContract,
+      strategyAddress: '',
+      strategyABI: [],
+      contractType: "bnb2x",
+      tokenId: ["bnb"],
+      inceptionBlock: 14619576,
+      pnl:[
+        {db: "lp", tokenId: ""},
+        {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
+        {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
+      ],
+      network: constant.BSC,
     }
   },
   DVD: {
@@ -406,6 +421,18 @@ const testContracts = {
       abi: abi.dvdDistBotContract,
       address: "0xcd3e01fdcf37d76f95f265001969695d00505d9f", 
       startBlock: 26902654
+    }
+  },
+  leverage: {
+    crBnb:  {
+      address: "", // not supported on tesnet 
+      abi: abi.crBnbContractAbi,
+      network: constant.BSC
+    },
+    crUsdc: {
+      address: "", // not supported on testnet
+      abi:abi.crUsdcContractAbi,
+      network: constant.BSC
     }
   }
 };
@@ -613,6 +640,21 @@ const mainContracts = {
       ],
       network: constant.ETHEREUM,
     },
+    bnb2x: {
+      address: '0x97b1934ba9Ec1c07c226B08f0D51f0c0298aAD44',
+      abi: abi.leverageBnbVaultContract,
+      strategyAddress: '',
+      strategyABI: [],
+      contractType: "bnb2x",
+      tokenId: ["bnb"], 
+      inceptionBlock: 13544768,
+      pnl:[
+        {db: "lp", tokenId: ""},
+        {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
+        {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
+      ],
+      network: constant.BSC,
+    },
     daoAXA: {
       address: '0xa4dcbe792f51e13fc0e6961bbec436a881e73194', 
       abi: abi.avaxVaultContract,
@@ -773,6 +815,18 @@ const mainContracts = {
       abi: abi.dvdDistBotContract,
       address: "0x118875dc986485fe53ed5b2cd6750a9150566c8f", 
       startBlock: 13086520
+    }
+  },
+  leverage: {
+    crBnb:  {
+      address: "0x1Ffe17B99b439bE0aFC831239dDECda2A790fF3A",
+      abi: abi.crBnbContractAbi,
+      network: constant.BSC
+    },
+    crUsdc: {
+      address: "0xD83C88DB3A6cA4a32FFf1603b0f7DDce01F5f727",
+      abi:abi.crUsdcContractAbi,
+      network: constant.BSC
     }
   }
 };

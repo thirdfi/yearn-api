@@ -57,6 +57,16 @@ const getMoneyPrinterPricePerFullShare = async (contract) => {
   return pricePerFullShare;
 }
 
+const getLeverageBNBPricePerFullShare = async(contract) => {
+  let pricePerFullShare = 0;
+  try {
+    const pool = await contract.methods.getNavInUSD().call();
+    const totalSupply = await contract.methods.totalSupply().call();
+    pricePerFullShare = (pool * 10 ** 10) / totalSupply;
+  } catch (ex) { }
+  return pricePerFullShare;
+}
+
 const getPricePerFullShare = async(contract, vaultSymbol) => {
   let pricePerFullShare = 0;
   try {
@@ -87,6 +97,8 @@ const getCurrentPrice = async () => {
         pricePerFullShare = await getFaangPricePerFullShare(contract);
       } else if (contracts.farmer[key].contractType === 'moneyPrinter') {
         pricePerFullShare = await getMoneyPrinterPricePerFullShare(contract);
+      } else if (contracts.farmer[key].contractType === "bnb2x") {
+        pricePerFullShare = await getLeverageBNBPricePerFullShare(contract);
       } else {
         pricePerFullShare = await getPricePerFullShare(contract, key);
       }

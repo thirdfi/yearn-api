@@ -47,6 +47,27 @@ const testVaults = [
     price_id: ["tether", "usd-coin", "dai"],
     isDaoSafu: true,
   },
+  {
+    id: "bnb2x",
+    name: "Leverage BNB",
+    symbol: ["BNB"],
+    description: "Leverage BNB Vault",
+    vaultSymbol: "bnb2x",
+    erc20address: ["0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"],
+    vaultContractAddress: "0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd", // Update
+    vaultContractABI: abi.leverageBnbVaultContract,
+    balance: 0,
+    vaultBalance: 0,
+    decimals: 18,
+    deposit: true,
+    depositAll: true,
+    withdraw: true,
+    withdrawAll: true,
+    lastMeasurement: 	14441185,
+    measurement: 1e18,
+    price_id: ["wbnb"],
+    isLeverage: true,
+  },
 ];
 
 const mainVaults = [
@@ -99,6 +120,27 @@ const mainVaults = [
     measurement: 1e18,
     price_id: ["tether", "usd-coin", "dai"],
     isDaoSafu: true,
+  },
+  {
+    id: "bnb2x",
+    name: "Leverage BNB",
+    symbol: ["BNB"],
+    description: "Leverage BNB Vault",
+    vaultSymbol: "bnb2x",
+    erc20address: [], // WBNB Update here
+    vaultContractAddress: "0x97b1934ba9Ec1c07c226B08f0D51f0c0298aAD44",
+    vaultContractABI: abi.leverageBnbVaultContract,
+    balance: 0,
+    vaultBalance: 0,
+    decimals: 18,
+    deposit: true,
+    depositAll: true,
+    withdraw: true,
+    withdrawAll: true,
+    lastMeasurement: 	13544768,
+    measurement: 1e18,
+    price_id: [],
+    isLeverage: true,
   },
 ];
 

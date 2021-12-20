@@ -119,6 +119,28 @@ const getFaangPricePerFullShare = async (contract, block, inceptionBlockNbr) => 
   return pricePerFullShare;
 }
 
+const getLeverageBNBPricePerFullShare = async(contract, block, inceptionBlockNbr) => {
+  const contractDidntExist = block < inceptionBlockNbr;
+  const inceptionBlock = block === inceptionBlockNbr;
+
+  if (inceptionBlock) {
+    return 1e18;
+  }
+  if (contractDidntExist) {
+    return 0;
+  }
+
+  let pricePerFullShare = 0;
+  try {
+    const pool = await contract.methods.getNavInUSD().call(undefined, block);
+    const totalSupply = await contract.methods.totalSupply().call(undefined,block);
+    pricePerFullShare = (pool * 10 ** 10) / totalSupply;
+  } catch (ex) { 
+    console.error(`[apy/save/handler]Error in getLeverageBNBPricePerFullShare(): `, ex);
+  }
+  return pricePerFullShare;
+}
+
 // For new strategies from metaverse onwards
 const getPricePerFullShare = async(contract, block, inceptionBlockNumber, vaultSymbol) => {
   const contractDidntExist = block < inceptionBlockNumber;
@@ -346,4 +368,5 @@ module.exports.getElonPricePerFullShare = getElonPricePerFullShare;
 module.exports.getCubanPricePerFullShare = getCubanPricePerFullShare;
 module.exports.getFaangPricePerFullShare = getFaangPricePerFullShare;
 module.exports.getPricePerFullShare = getPricePerFullShare;
+module.exports.getLeverageBNBPricePerFullShare = getLeverageBNBPricePerFullShare;
 module.exports.calculateApy = calculateApy;

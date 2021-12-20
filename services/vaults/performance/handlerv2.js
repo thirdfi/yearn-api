@@ -64,6 +64,10 @@ const getTotalPool = async(etf, vault, block, network) => {
   try {
       if(etf === "daoSTO") {
         pool = await vault.getTotalValueInPool({ blockTag: block });
+      } else if (etf === "bnb2x") {
+        // Leverage BNB
+        pool = await vault.methods.getNavInUSD().call(undefined, block);
+        pool = pool.mul(ethers.BigNumber.from("10000000000")) // Default pool in 8 decimals, magnify to 18 decimals
       } else if(networks.includes(network)) {
         // BSC or Polygon Network
         // Different function name for daoMPT
@@ -201,7 +205,7 @@ const getNextUpdateBlock = async (dateTime, network) => {
 }
 
 const getPricePerFullShare = async(etf, vault, block, network, pool, totalSupply) => {
-  const olderStrategies = ["daoCDV", "daoSTO", "daoELO", "daoCUB", "daoMPT"];
+  const olderStrategies = ["daoCDV", "daoSTO", "daoELO", "daoCUB", "daoMPT", "bnb2x"]; // Leverage BNB need manual calculation
   const tempStrategies = ["daoCDV2", "daoSTO2"]; // Strategies which required total deposited amount deducted
   let pricePerFullShare = 0;
 
@@ -303,7 +307,6 @@ const syncHistoricalPerformance = async (dateTime) => {
           } 
         }
         
-
         // currentPrice["lp"] = calcLPTokenPriceUSD(etf, totalSupply, totalPool, network);
         currentPrice["lp"] = await getPricePerFullShare(etf, vault, date.block, network, totalPool, totalSupply);
         
