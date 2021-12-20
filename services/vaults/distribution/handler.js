@@ -93,8 +93,8 @@ const getUnderlyingAssetsForBnb2x = async() => {
         bnbAllocation = bnbBalance.dividedBy(total).toNumber();
         usdcAllocation = usdcDebt.dividedBy(total).toNumber();
 
-        leverageRatio = bnbBalance.dividedBy(bnbBalance.subtract(usdcDebt)).toNumber();
-
+        leverageRatio = bnbBalance.dividedBy(bnbBalance.minus(usdcDebt)).toNumber();
+      
     } catch(err){
         console.error(`Error in getUnderlyingAssetsForBnb2x(): `, err);
     } finally {
