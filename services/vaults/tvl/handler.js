@@ -122,8 +122,7 @@ const getTVL = async (vault) => {
     } else if (vault.contractType === "bnb2x") {
       const contract = await getContract(vault);
       const poolAmount = await contract.methods.getNavInUSD().call();
-      const decimals = await contract.methods.decimals().call();
-      tvl = poolAmount / 10 ** 8;
+      tvl = poolAmount / 10 ** 18;
     } else {
       const contract = await getContract(vault);
       const usdPool = await contract.methods.getAllPoolInUSD().call();
