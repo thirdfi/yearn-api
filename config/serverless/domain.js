@@ -797,6 +797,11 @@ const mainContracts = {
       abi: abi.eacAggregatoorProxyContract,
       network: constant.ETHEREUM,
     },
+    BNB_USD : {
+      address: "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE",
+      abi: abi.eacAggregatoorProxyContract,
+      network: constant.BSC,
+    }
   },
   polygonChainLink: {
     USDT_USD: {
