@@ -134,7 +134,7 @@ const getLeverageBNBPricePerFullShare = async(contract, block, inceptionBlockNbr
   try {
     const pool = await contract.methods.getNavInUSD().call(undefined, block);
     const totalSupply = await contract.methods.totalSupply().call(undefined,block);
-    pricePerFullShare = (pool * 10 ** 10) / totalSupply;
+    pricePerFullShare = pool / totalSupply;
   } catch (ex) { 
     console.error(`[apy/save/handler]Error in getLeverageBNBPricePerFullShare(): `, ex);
   }
