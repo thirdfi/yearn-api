@@ -62,7 +62,7 @@ const getLeverageBNBPricePerFullShare = async(contract) => {
   try {
     const pool = await contract.methods.getNavInUSD().call();
     const totalSupply = await contract.methods.totalSupply().call();
-    pricePerFullShare = (pool * 10 ** 10) / totalSupply;
+    pricePerFullShare = pool / totalSupply;
   } catch (ex) { }
   return pricePerFullShare;
 }

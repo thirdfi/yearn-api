@@ -6,7 +6,8 @@ const dateTimeHelper = require("../../../utils/dateTime");
 
 const constant = require("../../../utils/constant");
 const tokenDb = require("../../../models/token.model");
-const BigNumber = require("bignumber.js");
+// const BigNumber = require("bignumber.js");
+const web3 = require("web3");
 
 const util = require("util");
 const { TOKEN_COINGECKO_ID } = require("../../../utils/constant");
@@ -61,39 +62,45 @@ const getUnderlyingAssetsForBnb2x = async() => {
 
         // Create BNB2X Contract
         const contracts = contractHelper.getContractsFromDomain();
-        const { address: bnb2xAddress } = contracts.farmer["bnb2x"];
+        const { address: bnb2xAddress, abi: bnb2xAbi } = contracts.farmer["bnb2x"];
         
         if(bnb2xAddress === undefined) {
             throw (`Not able to find bnb2x info`);
         }
+
+        // Get Leverage Ratio
+        const leverageContract = await contractHelper.getBSCContract(bnb2xAbi,bnb2xAddress);
+        leverageRatio = ( await leverageContract.methods.getLeverage().call() ) / 10 ** 18;
         
-        // Create cBNB contract
+        // Calculate BNB Allocation
         const { abi: cBNBAbi, address: cBNBAddress} = contracts.leverage.crBnb;
         const cBnbContract = await contractHelper.getBSCContract(cBNBAbi, cBNBAddress);
 
-        // Create cUSDC contract
+        const cBnbBalance = await cBnbContract.methods.balanceOf(bnb2xAddress).call();
+        const exchangeRate = await cBnbContract.methods.exchangeRateStored().call();
+        const bnbBalance = cBnbBalance * exchangeRate / 10 ** 36;
+        
+        // Create BNB <-> USD Chainlink contract
+        const { abi: bnbUsdAbi, address: bnbUsdChainlinkAddress } = contracts.chainLink.BNB_USD;
+        const bnbUsdContract = await contractHelper.getBSCContract(bnbUsdAbi, bnbUsdChainlinkAddress);
+        const bnbPriceInUsd = (await bnbUsdContract.methods.latestAnswer().call()) / 10 ** 8 ;
+       
+        // Getting BNB Balance in USD
+        const bnbBalanceInUSD = bnbBalance * bnbPriceInUsd;
+       
+        // Net value
+        const netValue = (await leverageContract.methods.getNavInUSD().call()) / 10 ** 18;
+
+        // BNB Allocation
+        bnbAllocation = bnbBalanceInUSD / netValue * 100;
+       
+        // USDC Debt
         const { abi: cUsdcAbi, address: cUsdcAddress}  = contracts.leverage.crUsdc;
         const cUsdcContract =  await contractHelper.getBSCContract(cUsdcAbi, cUsdcAddress);
+        const usdcDebt = (await cUsdcContract.methods.borrowBalanceStored(bnb2xAddress).call()) / 10 ** 18;
         
-        // Getting BNB Balance
-        let bnbBalance = 0;
-        const cBnbBalance = await cBnbContract.methods.balanceOf(bnb2xAddress).call();
-        let exchangeRate = await cBnbContract.methods.exchangeRateStored().call();
-    
-        // Getting Exchange Rate
-        exchangeRate = new BigNumber(exchangeRate);
-        bnbBalance =new BigNumber(cBnbBalance).multipliedBy(exchangeRate).shiftedBy(-8);
-       
-        // Getting USDC Debt
-        let usdcDebt = await cUsdcContract.methods.borrowBalanceStored(bnb2xAddress).call();
-        usdcDebt = new BigNumber(usdcDebt);
-
-        const total = bnbBalance.plus(usdcDebt);
-
-        bnbAllocation = bnbBalance.dividedBy(total).toNumber();
-        usdcAllocation = usdcDebt.dividedBy(total).toNumber();
-
-        leverageRatio = bnbBalance.dividedBy(bnbBalance.minus(usdcDebt)).toNumber();
+        // USDC Allocation 
+        usdcAllocation = (usdcDebt / netValue * 100) * -1;
       
     } catch(err){
         console.error(`Error in getUnderlyingAssetsForBnb2x(): `, err);
@@ -119,6 +126,7 @@ const getUnderlyingAssetsForBnb2x = async() => {
                     ? usdcAllocation
                     : bnbAllocation
             }
+            // console.log(util.inspect(assetObject));
 
             delete assetObject._id;
            

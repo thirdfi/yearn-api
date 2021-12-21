@@ -67,7 +67,7 @@ const getTotalPool = async(etf, vault, block, network) => {
       } else if (etf === "bnb2x") {
         // Leverage BNB
         pool = await vault.methods.getNavInUSD().call(undefined, block);
-        pool = pool.mul(ethers.BigNumber.from("10000000000")) // Default pool in 8 decimals, magnify to 18 decimals
+        // pool = pool.mul(ethers.BigNumber.from("10000000000")) // Default pool in 8 decimals, magnify to 18 decimals
       } else if(networks.includes(network)) {
         // BSC or Polygon Network
         // Different function name for daoMPT
