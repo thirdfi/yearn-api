@@ -19,6 +19,7 @@ db.cdz_strategies.insertMany([
         "happyHourEnabled": true,
         "isDepositEnabled": true,
         "isWithdrawEnabled": true,
+        "minDeposit": 1,
         "abi": [
             {
               "anonymous": false,
