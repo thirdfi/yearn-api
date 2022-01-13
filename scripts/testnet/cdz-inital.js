@@ -1,3 +1,5 @@
+// Min Deposit : Indicate if minimum deposit is required, to perform validation on frontend
+
 db.cdz_strategies.insertMany([
     {
         "name": "Leverage BNB",
@@ -19,7 +21,7 @@ db.cdz_strategies.insertMany([
         "happyHourEnabled": true,
         "isDepositEnabled": true,
         "isWithdrawEnabled": true,
-        "minDeposit": 1,
+        "minDeposit": true,
         "abi": [
             {
               "anonymous": false,
