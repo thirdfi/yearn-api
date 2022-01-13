@@ -641,13 +641,13 @@ const mainContracts = {
       network: constant.ETHEREUM,
     },
     bnb2x: {
-      address: '0x97b1934ba9Ec1c07c226B08f0D51f0c0298aAD44',
+      address: '0xbd9Ab4919CD70249417F8b4500Eb2837cA5a2446',
       abi: abi.leverageBnbVaultContract,
       strategyAddress: '',
       strategyABI: [],
       contractType: "bnb2x",
       tokenId: ["bnb"], 
-      inceptionBlock: 13544768,
+      inceptionBlock: 14296774,
       pnl:[
         {db: "lp", tokenId: ""},
         {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},

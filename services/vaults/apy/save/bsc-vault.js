@@ -128,7 +128,7 @@ const mainVaults = [
     description: "Leverage BNB Vault",
     vaultSymbol: "bnb2x",
     erc20address: [], // WBNB Update here
-    vaultContractAddress: "0x97b1934ba9Ec1c07c226B08f0D51f0c0298aAD44",
+    vaultContractAddress: "0xbd9Ab4919CD70249417F8b4500Eb2837cA5a2446",
     vaultContractABI: abi.leverageBnbVaultContract,
     balance: 0,
     vaultBalance: 0,
@@ -137,7 +137,7 @@ const mainVaults = [
     depositAll: true,
     withdraw: true,
     withdrawAll: true,
-    lastMeasurement: 	13544768,
+    lastMeasurement: 	14296774,
     measurement: 1e18,
     price_id: [],
     isLeverage: true,
