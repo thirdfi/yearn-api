@@ -652,6 +652,7 @@ const mainContracts = {
         {db: "lp", tokenId: ""},
         {db: "btc", tokenId: constant.TOKEN_COINGECKO_ID.BTC},
         {db: "eth", tokenId: constant.TOKEN_COINGECKO_ID.ETH},
+        {db: "bnb", tokenId: constant.TOKEN_COINGECKO_ID.BNB},
       ],
       network: constant.BSC,
     },
