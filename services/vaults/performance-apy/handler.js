@@ -113,6 +113,7 @@ const getApyAttributeNameByStrategy = (strategyType) => {
                 { seriesName: "Leverage BNB", attributeName: "lp_performance"},
                 { seriesName: "BTC", attributeName: "btc_performance" },
                 { seriesName: "ETH", attributeName: "eth_performance" },
+                { seriesName: "BNB", attributeName: "bnb_performance" },
             ];
         default: 
             return [];
