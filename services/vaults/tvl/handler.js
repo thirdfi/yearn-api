@@ -123,6 +123,10 @@ const getTVL = async (vault) => {
       const contract = await getContract(vault);
       const poolAmount = await contract.methods.getNavInUSD().call();
       tvl = poolAmount / 10 ** 18;
+    } else if (vault.contractType === "metaverse") {
+      const contract = await getContract(vault);
+      const usdPool = await contract.methods.getAllPoolInUSD(false).call();
+      tvl = usdPool / 10 ** 18; // Check from code, Pool In USD returns in 18 decimals
     } else {
       const contract = await getContract(vault);
       const usdPool = await contract.methods.getAllPoolInUSD().call();
