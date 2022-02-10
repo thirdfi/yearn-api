@@ -8,7 +8,7 @@ db.cdz_strategies.insertMany([
         "infoLink": "",
         "chain": "bscMain",
         "strategyName": "Leverage BNB",
-        "info": "BNB 2x Flexible Leverage Index",
+        "info": "BNB 2X AUTO-LEVERAGE INDEX",
         "description": "Double your BNB trading power with the flexible 2x auto-leveraged index",
         "logoFormat": "svg",
         "group": "Expert",
