@@ -10,7 +10,6 @@ const cronjobModel = require("../../../models/cronjob.model");
 const pnlSeriesModel = require("../../../models/strategy-pnl-series.model");
 
 const { eacAggregatoorProxyContract: chainlinkAbi } = require("../../../config/abi");
-const { of } = require("ramda");
 
 module.exports.savePerformance = async() => {
     const strategies = contractHelper.getContractsFromDomain();
@@ -37,10 +36,6 @@ module.exports.savePerformance = async() => {
                 // pnl: pnlSeries, 
                 inceptionBlock: startBlock
             } = strategy;
-
-            if(!["daoMPT", "daoDEGEN"].includes(etf)) {
-                continue;
-            }
 
             const vault = await contractHelper.getContract({ abi, address, network});
             
