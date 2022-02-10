@@ -21,6 +21,8 @@ const reimbursementRouter = require("./routes/reimbursementRouter");
 const partnerRouter = require("./routes/partnershipRoute");
 const v2Router = require('./routes/v2Routes');
 
+const { updateCronjobNotInExecution } = require("./models/cronjob.model");
+
 async function init() {
     // Improve debugging
     process.on("unhandledRejection", (reason, p) => {
@@ -29,6 +31,9 @@ async function init() {
 
     db.connectDB(async (err) => {
         if (err) throw err;
+
+        // Update cronjob in collection as not in execution after restart
+        await updateCronjobNotInExecution();
 
         jobs.saveVault();
         jobs.saveVaultAPY();
