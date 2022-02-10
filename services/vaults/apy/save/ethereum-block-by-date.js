@@ -33,11 +33,11 @@ module.exports = class {
             await this.getBlockTime();
         if (date.isBefore(this.firstTimestamp))
             return { date: date.format(), block: 1 };
-        if (date.isSameOrAfter(moment.unix(this.savedBlocks.latest.timestamp)))
-            return {
-                date: date.format(),
-                block: await this.web3.eth.getBlockNumber(),
-            };    
+        // if (date.isSameOrAfter(moment.unix(this.savedBlocks.latest.timestamp)))
+        //     return {
+        //         date: date.format(),
+        //         block: await this.web3.eth.getBlockNumber(),
+        //     };    
         await delay(this.delayTime);
         this.checkedBlocks[date.unix()] = [];
         let predictedBlock = await this.getBlockWrapper(
