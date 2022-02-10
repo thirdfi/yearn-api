@@ -2,7 +2,7 @@
 
 db.cdz_strategies.insertMany([
     {
-        "name": "Leverage BNB",
+        "name": "BNB2x-ALI",
         "symbol": "bnb2x",
         "address": "0x2C4C21aDb9fb0a87D8A63Be8434965BeA6370dCd",
         "decimals": 18,
@@ -10,7 +10,7 @@ db.cdz_strategies.insertMany([
         "infoLink": "",
         "chain": "bscTest",
         "strategyName": "Leverage BNB",
-        "info": "BNB 2x Flexible Leverage Index",
+        "info": "BNB 2X AUTO-LEVERAGE INDEX",
         "description": "Double your BNB trading power with the flexible 2x auto-leveraged index",
         "logoFormat": "svg",
         "group": "Expert",
