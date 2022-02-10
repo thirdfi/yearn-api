@@ -16,7 +16,7 @@ const daomineSave = require("../services/staking/daomine/handler");
 const poolSave = require("../services/staking/handler");
 const vipDVG = require("../services/staking/vipdvg/handler");
 // const performanceSave = require("../services/vaults/performance/handler");
-const performanceSave = require("../services/vaults/performance/handlerv2"); 
+const performanceSave = require("../services/vaults/performance/handlerv3"); 
 const tokenSave = require("../services/vaults/distribution/handler");
 const totalDepositAmountSave = require("../services/vaults/totalDepositedAmount/handler");
 
