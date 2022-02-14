@@ -361,6 +361,47 @@ db.strategy_pnl_series.insertMany([
         ]
     },
     {
+        symbol: 'bnb2x',
+        series: [
+            {
+                db: 'lp', 
+                network: "bsc",
+                chainlink: "", 
+                decimals: 18, 
+                name: "Leverage BNB",
+                showOnGraph: true,
+                tokenId: "" 
+            },
+            {
+                db: 'eth', 
+                network: "bsc",
+                chainlink: "0x9ef1B8c0E4F7dc8bF5719Ea496883DC6401d5b2e",
+                decimals: 8, // decimals from chainlink contract
+                name: "ETH", // series label on the frontend graph
+                showOnGraph: true,
+                tokenId: "ethereum" 
+            },
+            {
+                db: 'btc', // refer to lp_token_price_usd in collection data
+                network: "bsc",
+                chainlink: "0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf",
+                decimals: 8, // decimals from chainlink contract
+                name: "BTC", // series label on the frontend graph
+                showOnGraph: true,
+                tokenId: "bitcoin" 
+            },
+            {
+                db: 'bnb', // refer to lp_token_price_usd in collection data
+                network: "bsc",
+                chainlink: "0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE",
+                decimals: 8, // decimals from chainlink contract
+                name: "BNB", // series label on the frontend graph
+                showOnGraph: true,
+                tokenId: "binancecoin" 
+            }
+        ]
+    },
+    {
         symbol: 'daoAXA',
         series: [
             {
