@@ -66,4 +66,5 @@ module.exports = {
   daoAXSFarmer: 'daoAXS_historical-apy', 
   daoASAFarmer: 'daoASA_historical-apy', 
   daoA2SFarmer: 'daoA2S_historical-apy', 
+  bnb2xFarmer: 'bnb2x_historical-apy'
 };

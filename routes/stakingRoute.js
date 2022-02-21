@@ -15,6 +15,16 @@ router.get("/get-pools", (req, res) => {
     }
 });
 
+
+// new DAOmine pools
+router.get("/get-daomine-pools", (req,res) => {
+    try {
+        daomine.getDAOminePools(req, res);
+    } catch (err) {
+        console.error(`Error while getting /get-daomine-pools`, err);
+    }
+});
+
 // Emergency Withdraw Snapshot
 router.get("/emergency-withdraw-snapshot", (req, res) => {
     try {

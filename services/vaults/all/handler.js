@@ -1,13 +1,15 @@
-const { findAllTVL } = require("../tvl/handler");
+const { findAllTVL, findTVLByStrategies } = require("../tvl/handler");
 const { findAllPool } = require("../../staking/handler");
 const { findAllVaultCategory: findAllVaults } = require("../category/handler");
-const { findAllStrategiesAssetDistribution } = require("../distribution/handler");
+const { findAllStrategiesAssetDistribution, getUnderlyingAssetsForBnb2x } = require("../distribution/handler");
 const { calculateStrategyPNL, findPerformanceWithTimePeriods } = require("../performance/handler");
 const { getLatestTotalAmountDepositInfo } = require("../totalDepositedAmount/handler");
 
 const contractHelper = require("../../../utils/contract");
 const dateTimeHelper = require("../../../utils/dateTime");
 const constant = require("../../../utils/constant");
+
+const util = require("util");
 
 let contracts;
 
@@ -71,13 +73,12 @@ const findAllDepositedAmount = async() => {
     return resultMap;
 }
 
-const findAllPerformance = async () => {
-    const etfTypeStrategies = constant.ETF_STRATEGIES;
+const findAllPerformance = async (strategies) => {
     const period = "1y";
     const startTime = dateTimeHelper.getStartTimeFromParameter(period);
 
     const returnResult = {};
-    for(const strategy of etfTypeStrategies) {
+    for(const strategy of strategies) {
         const result = await findPerformanceWithTimePeriods(
             strategy,
             startTime
@@ -97,16 +98,21 @@ const getVaultDAOmineAPY = (pools, vaultAddress) => {
 const proccessingVault = async (obj) => {
     const { vaults, selectedNetwork } = obj;
 
-    const [tvls, daominePools, vaultContracts, performances, assetsDistribution, totalDepositedAmounts] = await Promise.all([
-        findAllTVL(contracts),
+    const [tvls, daominePools, vaultContracts, performances, assetsDistribution, totalDepositedAmounts, underlyingAssets] = await Promise.all([
+        findTVLByStrategies(vaults),
         findAllPool(),
         findAllVaults(),
-        findAllPerformance(),
+        findAllPerformance(vaults),
         findAllStrategiesAssetDistribution(),
-        findAllDepositedAmount()
+        findAllDepositedAmount(),
+        getUnderlyingAssetsForBnb2x(),
     ]);
+    
 
     const results = {};
+    if(contracts === undefined) {
+        contracts = await contractHelper.getContractsFromDomain();
+    }
     vaults.map(key => {
         const vaultAddress = contracts.farmer[key].address;
         const abi = contracts.farmer[key].abi;
@@ -115,7 +121,7 @@ const proccessingVault = async (obj) => {
         obj = getVaultInfo(vaultContracts, vaultAddress, obj, selectedNetwork);
 
         const tvl = tvls[key] ? tvls[key] : null;
-        const pnl = performances[key] ? performances[key] : null;
+        const pnl = performances[key] ? performances[key] : 0;
         const assetDistribution = assetsDistribution[key] ? assetsDistribution[key] : null;
         const daomineApy = getVaultDAOmineAPY(daominePools, vaultAddress);
 
@@ -131,13 +137,20 @@ const proccessingVault = async (obj) => {
         if (["daoCDV2", "daoSTO2"].includes(key)) {
             obj["totalDepositedAmount"] = totalDepositedAmounts[key];
         }
+
+        // Underlying asset for Leverage BNB 
+        if(key === "bnb2x") {
+            obj["asset_allocation"] = underlyingAssets.allocation;
+            obj["leverageRatio"] = underlyingAssets.leverageRatio;
+        }
+
         results[key] = obj;
     });
 
     return results;
 }
 
-module.exports.handler = async (req, res) => {
+const handler = async(req,res) => {
     let message = "";
     let result = null;
     
@@ -179,4 +192,9 @@ module.exports.handler = async (req, res) => {
             body: result
         });
     }
+}
+
+module.exports = {
+    handler, 
+    proccessingVault
 }

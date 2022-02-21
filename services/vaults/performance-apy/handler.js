@@ -108,6 +108,13 @@ const getApyAttributeNameByStrategy = (strategyType) => {
                 { seriesName: "BTC", attributeName: "btc_performance" },
                 { seriesName: "ETH", attributeName: "eth_performance" },
             ];
+        case constant.STRATEGY_TYPE.BNB2X:
+            return [
+                { seriesName: "Leverage BNB", attributeName: "lp_performance"},
+                { seriesName: "BTC", attributeName: "btc_performance" },
+                { seriesName: "ETH", attributeName: "eth_performance" },
+                { seriesName: "BNB", attributeName: "bnb_performance" },
+            ];
         default: 
             return [];
     }

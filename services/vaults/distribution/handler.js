@@ -6,6 +6,11 @@ const dateTimeHelper = require("../../../utils/dateTime");
 
 const constant = require("../../../utils/constant");
 const tokenDb = require("../../../models/token.model");
+// const BigNumber = require("bignumber.js");
+const web3 = require("web3");
+
+const util = require("util");
+const { TOKEN_COINGECKO_ID } = require("../../../utils/constant");
 
 let delayTime = 10000;
 
@@ -40,6 +45,96 @@ const getUnderlyingAssetsForTA = async () => {
         console.error(`Error in getUnderlyingAssetsForTA()`, err);
     } finally {
         return result;
+    }
+}
+
+// Special case for Leverage BNB
+const getUnderlyingAssetsForBnb2x = async() => {
+    let bnbAllocation = 0;
+    let usdcAllocation = 0;
+    let leverageRatio = 0;
+
+    try {
+        if(process.env.PRODUCTION === null ||  process.env.PRODUCTION === "") {
+            // In testnet environment
+            throw(`getUnderlyingAssetsForBnb2x only supported on mainnet`);
+        }
+
+        // Create BNB2X Contract
+        const contracts = contractHelper.getContractsFromDomain();
+        const { address: bnb2xAddress, abi: bnb2xAbi } = contracts.farmer["bnb2x"];
+        
+        if(bnb2xAddress === undefined) {
+            throw (`Not able to find bnb2x info`);
+        }
+
+        // Get Leverage Ratio
+        const leverageContract = await contractHelper.getBSCContract(bnb2xAbi,bnb2xAddress);
+        leverageRatio = ( await leverageContract.methods.getLeverage().call() ) / 10 ** 18;
+        
+        // Calculate BNB Allocation
+        const { abi: cBNBAbi, address: cBNBAddress} = contracts.leverage.crBnb;
+        const cBnbContract = await contractHelper.getBSCContract(cBNBAbi, cBNBAddress);
+
+        const cBnbBalance = await cBnbContract.methods.balanceOf(bnb2xAddress).call();
+        const exchangeRate = await cBnbContract.methods.exchangeRateStored().call();
+        const bnbBalance = cBnbBalance * exchangeRate / 10 ** 36;
+        
+        // Create BNB <-> USD Chainlink contract
+        const { abi: bnbUsdAbi, address: bnbUsdChainlinkAddress } = contracts.chainLink.BNB_USD;
+        const bnbUsdContract = await contractHelper.getBSCContract(bnbUsdAbi, bnbUsdChainlinkAddress);
+        const bnbPriceInUsd = (await bnbUsdContract.methods.latestAnswer().call()) / 10 ** 8 ;
+       
+        // Getting BNB Balance in USD
+        const bnbBalanceInUSD = bnbBalance * bnbPriceInUsd;
+       
+        // Net value
+        const netValue = (await leverageContract.methods.getNavInUSD().call()) / 10 ** 18;
+
+        // BNB Allocation
+        bnbAllocation = bnbBalanceInUSD / netValue * 100;
+       
+        // USDC Debt
+        const { abi: cUsdcAbi, address: cUsdcAddress}  = contracts.leverage.crUsdc;
+        const cUsdcContract =  await contractHelper.getBSCContract(cUsdcAbi, cUsdcAddress);
+        const usdcDebt = (await cUsdcContract.methods.borrowBalanceStored(bnb2xAddress).call()) / 10 ** 18;
+        
+        // USDC Allocation 
+        usdcAllocation = (usdcDebt / netValue * 100) * -1;
+      
+    } catch(err){
+        console.error(`Error in getUnderlyingAssetsForBnb2x(): `, err);
+    } finally {
+        const underlyingAssets = await tokenDb.findTokenByIds([TOKEN_COINGECKO_ID.USDC, TOKEN_COINGECKO_ID.BNB]);
+        const result =  underlyingAssets.map(asset => {
+            const assetArray = [];
+            const assetSymbol = asset.symbol;
+            assetArray.push(assetSymbol);
+
+             // Representative color in chart
+             let chartColor = constant.TOKEN_CHART_COLOR[assetSymbol];
+             if(chartColor === undefined) {
+                 chartColor = constant.BACKUP_CHART_COLOR[index];
+                 index ++;
+             }
+    
+            const assetObject = {
+                ...asset, 
+                infoLink: `https://www.coingecko.com/en/coins/${asset.tokenId}`,
+                color: chartColor, 
+                percent: asset.tokenId === TOKEN_COINGECKO_ID.USDC  
+                    ? usdcAllocation
+                    : bnbAllocation
+            }
+            // console.log(util.inspect(assetObject));
+
+            delete assetObject._id;
+           
+            assetArray.push(assetObject);
+            return assetArray;
+        });
+
+        return { allocation: result, leverageRatio };
     }
 }
 
@@ -112,6 +207,7 @@ const findAllStrategiesAssetDistribution = async() => {
 
 const saveAssetsPrice = async() => {
     try {
+
         const assets = await tokenDb.findAll();
 
         const yesterdayDate = await dateTimeHelper.formatDate(
@@ -199,4 +295,5 @@ module.exports.handler = async(req, res) => {
 module.exports.findAllStrategiesAssetDistribution = findAllStrategiesAssetDistribution;
 module.exports.saveAssetsPrice = saveAssetsPrice;
 module.exports.getStrategyAssetDistribution = getStrategyAssetDistribution;
+module.exports.getUnderlyingAssetsForBnb2x = getUnderlyingAssetsForBnb2x;
 

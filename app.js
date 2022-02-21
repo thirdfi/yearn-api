@@ -18,53 +18,59 @@ const stakingRouter = require("./routes/stakingRoute");
 const eventRouter = require("./routes/eventRoute");
 const vaultRouter = require("./routes/vaultRoute");
 const reimbursementRouter = require("./routes/reimbursementRouter");
+const partnerRouter = require("./routes/partnershipRoute");
+const v2Router = require('./routes/v2Routes');
 
 async function init() {
-  // Improve debugging
-  process.on("unhandledRejection", (reason, p) => {
-    console.log("Unhandled Rejection at:", p, "reason:", reason);
-  });
+    // Improve debugging
+    process.on("unhandledRejection", (reason, p) => {
+        console.log("Unhandled Rejection at:", p, "reason:", reason);
+    });
 
-  db.connectDB(async (err) => {
-    if (err) throw err;
+    db.connectDB(async (err) => {
+        if (err) throw err;
 
-    jobs.saveVault();
-    jobs.saveVaultAPY();
-    jobs.savePolygonVaultAPY();
-    jobs.saveBSCVaultAPY();
-    jobs.saveAvalancheVaultAPY();
-    jobs.savePricePerFullShare();
-    jobs.saveHistoricalAPY();
-    jobs.savePolygonHistoricalAPY();
-    jobs.saveBSCHistoricalAPY();
-    jobs.saveAvalancheHistoricalAPY();
-    jobs.saveHistoricalTVL();
-    jobs.saveHistoricalPools();
-    jobs.saveDAOmineHistoricalPools();
-    jobs.saveABIPools();
-    jobs.saveVipApr();
-    jobs.savePerformance();
-    jobs.saveTokenPrice();
-    jobs.saveTotalDepositedAmount();
-  });
+        jobs.saveVault();
+        jobs.saveVaultAPY();
+        jobs.savePolygonVaultAPY();
+        jobs.saveBSCVaultAPY();
+        jobs.saveAvalancheVaultAPY();
+        jobs.savePricePerFullShare();
+        jobs.saveHistoricalAPY();
+        jobs.savePolygonHistoricalAPY();
+        jobs.saveBSCHistoricalAPY();
+        jobs.saveAvalancheHistoricalAPY();
+        jobs.saveHistoricalTVL();
+        jobs.saveHistoricalPools();
+        jobs.saveDAOmineHistoricalPools();
+        jobs.saveABIPools();
+        jobs.saveVipApr();
+        jobs.savePerformance();
+        jobs.saveTokenPrice();
+        jobs.saveTotalDepositedAmount();
+    });
 
-  app.use(cors());
-  app.use(compression())
-  app.use(
-    bodyParser.urlencoded({
-      extended: true,
-    })
-  );
-  app.use(bodyParser.json());
- 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  app.use("/user", userRouter);
-  app.use("/staking", stakingRouter);
-  app.use("/event", eventRouter);
-  app.use("/vaults", vaultRouter);
-  app.use("/reimbursement-addresses", reimbursementRouter);
+    app.use(cors());
+    app.use(compression())
+    app.use(
+        bodyParser.urlencoded({
+            extended: true,
+        })
+    );
+    app.use(bodyParser.json());
+    app.use(compression())
 
-  app.listen(port, () => console.log(`Listening on ${port}`));
+
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use("/user", userRouter);
+    app.use("/staking", stakingRouter);
+    app.use("/event", eventRouter);
+    app.use("/vaults", vaultRouter);
+    app.use("/v2", v2Router);
+    app.use("/reimbursement-addresses", reimbursementRouter);
+    app.use("/partner", partnerRouter);
+
+    app.listen(port, () => console.log(`Listening on ${port}`));
 }
 
 init();
