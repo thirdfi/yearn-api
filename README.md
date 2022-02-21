@@ -58,3 +58,7 @@ Comment out the following line in docker-compose.yml
 ```yml
 command: [--auth]
 ```
+
+
+## Note for latest PNL Cronjob
+- Please run the script in `strategy_pnl_series-initial.js` and `cronjob-initial.js` before start the PNL cronjob
