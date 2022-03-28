@@ -74,11 +74,16 @@ const findAllDepositedAmount = async() => {
 }
 
 const findAllPerformance = async (strategies) => {
-    const period = "1y";
-    const startTime = dateTimeHelper.getStartTimeFromParameter(period);
+    let period = "1y";
+    let startTime = dateTimeHelper.getStartTimeFromParameter(period);
 
     const returnResult = {};
     for(const strategy of strategies) {
+        // Leverage BNB request for monthly PNL
+        if(strategy === "bnb2x") {
+            period = "30d";
+            startTime = dateTimeHelper.getStartTimeFromParameter(period)
+        }
         const result = await findPerformanceWithTimePeriods(
             strategy,
             startTime
