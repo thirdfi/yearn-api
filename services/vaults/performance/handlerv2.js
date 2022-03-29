@@ -75,7 +75,9 @@ const getTotalPool = async(etf, vault, block, network) => {
           pool = await vault.methods.getValueInPool().call(undefined, block);
         } else {
           pool = await vault.methods.getAllPoolInUSD().call(undefined, block);
-        }
+        } 
+      } else if (etf === "daoMVF"){
+        pool = await vault.getAllPoolInUSD(false, { blockTag: block });
       } else {
         // daoELO, daoCDV, daoCUB, daoMVF using this
         pool = await vault.getAllPoolInUSD({ blockTag: block });
