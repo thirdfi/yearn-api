@@ -3,7 +3,9 @@ services:
   database:
     image: mongo
     container_name: "database"
-    command: [--auth]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     restart: always
     ports:
       - "27017:27017"
@@ -21,8 +23,36 @@ services:
       - "8080:8080"
     networks:
       - backend
+    depends_on:
+      - database
+  webserver:
+    image: nginx:latest
+    container_name: webserver
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./:/var/www
+      - ./nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - api
+    networks:
+      - backend
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    networks:
+      - backend
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 volumes:
-  mongodata:
+  mongodata: 
+    driver: local
 networks:
   backend:
     driver: bridge
