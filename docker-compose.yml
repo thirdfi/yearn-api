@@ -26,11 +26,13 @@ services:
     depends_on:
       - database
   webserver:
-    image: nginx:latest
+    image: daoventures/frontend-app:latest
     container_name: webserver
     ports:
       - "80:80"
       - "443:443"
+    env_file:
+      - .env
     restart: always
     volumes:
       - ./:/var/www
